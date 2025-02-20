@@ -1,0 +1,71 @@
+
+running 6 tests
+test board::tests::test_apply ... ok
+test board::tests::test_plan ... ok
+test board::tests::test_position ... ok
+test min_heap::tests::test_min_heap ... ok
+Runtime: 2697 ns
+Expanded nodes: 0
+
+Runtime: 610 ns
+Expanded nodes: 3
+
+Runtime: 215 ns
+Expanded nodes: 4
+
+Runtime: 183 ns
+Expanded nodes: 9
+
+Runtime: 182 ns
+Expanded nodes: 14
+
+Runtime: 227 ns
+Expanded nodes: 18
+
+test heuristics::tests::test_heuristic ... Runtime: 163 ns
+Expanded nodes: 21
+
+ok
+Runtime: 179 ns
+Expanded nodes: 31
+
+Runtime: 978 ns
+Expanded nodes: 37
+
+Runtime: 253 ns
+Expanded nodes: 43
+
+Runtime: 276 ns
+Expanded nodes: 48
+
+Runtime: 179 ns
+Expanded nodes: 78
+
+Runtime: 230 ns
+Expanded nodes: 71
+
+Runtime: 275 ns
+Expanded nodes: 104
+
+Runtime: 384 ns
+Expanded nodes: 107
+
+Runtime: 309 ns
+Expanded nodes: 135
+
+Runtime: 303 ns
+Expanded nodes: 206
+
+Runtime: 274 ns
+Expanded nodes: 315
+
+Runtime: 304 ns
+Expanded nodes: 324
+
+Runtime: 413 ns
+Expanded nodes: 416
+
+test search::test::test_search ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
