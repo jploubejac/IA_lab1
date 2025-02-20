@@ -32,6 +32,7 @@ pub struct Djikstra_label{ //for gens distinguche pepole
     pub marked:bool
 }
 
+// cargo test -- --nocapture to get println stdout outputs
 pub fn search(init_state: Board) -> (Option<Vec<Direction>>, Stats) {
     let start = std::time::Instant::now();
     // MinHeap provide allows to store the states to explore, with associated priority
@@ -43,9 +44,13 @@ pub fn search(init_state: Board) -> (Option<Vec<Direction>>, Stats) {
     HashMap::insert(&mut cost_map, init_state, 0);
 
     let mut current_board = init_state;
+
+    let mut expanded=0;
+    // here is an example to measure the runtime and returns the statistics
+    let runtime = start.elapsed();
     while (!heap.is_empty() && current_board != Board::GOAL) {
         current_board = match heap.pop() {
-            None => panic!("jp viens sur mc"),
+            None => break,
             Some (fiston) => fiston
         };
         if current_board==Board::GOAL {
@@ -63,12 +68,12 @@ pub fn search(init_state: Board) -> (Option<Vec<Direction>>, Stats) {
                 None => continue,
                 Some (n_board) => n_board
             };
-            
             let cost = match cost_map.get(&new_board) {
                 None => {
                     cost_map.insert(new_board, 1+current_cost);
                     direction_map.insert(new_board, direction);
                     heap.insert(new_board, 1+current_cost);
+                    expanded+=1;
                     1+current_cost
                 },
                 Some (cout) => (*cout),
@@ -80,28 +85,38 @@ pub fn search(init_state: Board) -> (Option<Vec<Direction>>, Stats) {
                 direction_map.remove(&new_board);
                 direction_map.insert(new_board, direction);
                 heap.insert(new_board, 1+current_cost);
+                expanded+=1;
             }
         }
     }
-    
-    let mut path: Vec<Direction> = Vec::new();
-    let dir = match direction_map.get(&current_board){
-        None => panic!("Rien du tout"),
-        Some (direction) => (*direction)
-    };
-    let mut index = 0;
-    path.insert(index, dir);
-    let mut current_state = Board::GOAL;
-    while (current_state != init_state) {
-        index +=1;
-        Board::apply(&current_state, dir.opposite());
-        path.insert(index, dir);
-    }
 
-    // here is an example to measure the runtime and returns the statistics
-    let runtime = start.elapsed();
     // example to construct a Stats instance
-    let stats = Stats::new(0, runtime);
+    let stats = Stats::new(expanded, runtime);
+
+    if current_board != Board::GOAL {
+        return (None,stats);
+    }
+    let mut path: Vec<Direction> = Vec::new();
+
+    let mut index = 0;
+    while (current_board != init_state) {
+        
+        let dir = match direction_map.get(&current_board){
+            None => panic!("Rien du tout"),
+            Some (direction) => (*direction)
+        };
+        current_board= match Board::apply(&current_board, dir.opposite()) {
+            None => panic!("Error building the path"),
+            Some (board) => board
+        };
+
+        path.insert(index, dir);
+        index +=1;
+    }
+    path.reverse();
+
+    println!("{}",stats.runtime.as_nanos());
+    
     // return the results and associated stats
     (Some(path), stats)
 }
