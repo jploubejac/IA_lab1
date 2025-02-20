@@ -115,8 +115,9 @@ pub fn search(init_state: Board) -> (Option<Vec<Direction>>, Stats) {
     }
     path.reverse();
 
-    println!("{}",stats.runtime.as_nanos());
-    
+    println!("Runtime: {} ns",stats.runtime.as_nanos());
+    println!("Expanded nodes: {}\n",stats.expanded);
+
     // return the results and associated stats
     (Some(path), stats)
 }

@@ -1,3 +1,5 @@
+use std::env::consts::EXE_SUFFIX;
+
 use crate::board::*;
 
 /// A heuristic function to estimate the cost of reaching the goal state from a given board.
@@ -22,10 +24,33 @@ impl Heuristic {
             // blind heuristic always returns 0
             Heuristic::Blind => 0,
             Heuristic::Hamming => {
-                todo!()
+                let mut dist=0;
+                for i in (0..3) {
+                    for j in (0..3) {
+                        let value = if j==2 && i==2 {0} else { (i*3 + j + 1) };
+                        if usize::from(board.value_at(i, j)) != value {
+                            dist+=1;
+                        }
+                    }
+                }
+                return dist;
             }
             Heuristic::Manhattan => {
-                todo!()
+                let mut dist=0;
+                for i in (0..3) {
+                    for j in (0..3) {
+                        let expected = (i*3 + j + 1);
+                        let mut provided =usize::from(board.value_at(i, j));
+                        
+                        provided = if (provided == 0) {9} else {provided};
+
+                        let diff = (expected).abs_diff(provided);
+                        
+                        dist += diff / 3 + diff % 3 ;
+                    }
+                }
+                
+                return dist as u32;
             }
         }
     }
@@ -39,7 +64,7 @@ mod tests {
         use super::*;
         let board = Board::new([[8, 7, 3], [2, 0, 5], [1, 4, 6]]);
         assert_eq!(Heuristic::Blind.estimate(&board), 0);
-        assert_eq!(Heuristic::Hamming.estimate(&board), todo!());
-        assert_eq!(Heuristic::Manhattan.estimate(&board), todo!());
+        assert_eq!(Heuristic::Hamming.estimate(&board), 8);
+        assert_eq!(Heuristic::Manhattan.estimate(&board), 16);
     }
 }
